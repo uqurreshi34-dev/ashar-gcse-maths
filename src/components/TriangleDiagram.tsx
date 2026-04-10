@@ -146,10 +146,10 @@ function AngleDiagram({ d }: { d: DiagramData }) {
     tx = 55;  ty = 45;
     rx = 55 + (by - ty); ry = H - 45; // equal legs so dx = dy
   } else if (d.isObtuse) {
-    // Apex almost directly above bottom-left, slightly right — makes bottom-left angle > 90°
-    bx = 55;  by = H - 45;
-    rx = W - 45; ry = H - 45;
-    tx = 90;  ty = 48;
+    // Apex low and centred — wide top angle clearly > 90°, matching standard GCSE diagram
+    bx = 38;  by = H - 38;   // bottom-left A
+    rx = W - 38; ry = H - 38; // bottom-right B
+    tx = W / 2;  ty = 55;     // apex C — low enough that top angle opens wide
   } else if (d.isIsosceles) {
     bx = 48;  by = H - 42;
     rx = W - 48; ry = H - 42;
