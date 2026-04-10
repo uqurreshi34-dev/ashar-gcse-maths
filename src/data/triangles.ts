@@ -7,6 +7,7 @@ export interface TriangleDiagram {
   angleC?: number | null;  // top angle
   isRightAngle?: boolean;  // right angle at bottom-left
   isIsosceles?: boolean;
+  isObtuse?: boolean;      // renders a flat wide triangle with obtuse angle at bottom-left
   sideA?: number | null;   // vertical left side
   sideB?: number | null;   // horizontal bottom side
   sideC?: number | null;   // hypotenuse
@@ -34,7 +35,7 @@ export const triangleQuestions: TriangleQuestion[] = [
     correct: 1,
     working: "Angles in a triangle add up to 180°. 45 + 95 = 140. Third angle = 180 − 140 = 40°",
     hint: "Add the two known angles, then subtract from 180°.",
-    diagram: { type: "angle", angleA: 95, angleB: 45, angleC: null },
+    diagram: { type: "angle", angleA: 95, angleB: 45, angleC: null, isObtuse: true },
   },
   {
     id: 3,
