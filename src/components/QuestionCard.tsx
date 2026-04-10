@@ -112,7 +112,7 @@ export default function QuestionCard({
 
       {/* Triangle diagram if present */}
       {"diagram" in question && question.diagram && (
-        <div className="rounded-xl border border-white/10 bg-white/3 p-4">
+        <div className="rounded-xl border border-white/10 bg-white/3 py-3 px-2">
           <TriangleDiagram diagram={question.diagram} />
         </div>
       )}
