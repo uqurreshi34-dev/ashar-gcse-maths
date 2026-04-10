@@ -1,0 +1,68 @@
+import { Question } from "./equations";
+
+export const probabilityQuestions: Question[] = [
+  {
+    id: 1,
+    question: "A bag has 3 red and 7 blue balls. What is the probability of picking a red ball?",
+    options: ["3/10", "7/10", "3/7", "1/3"],
+    correct: 0,
+    working: "Probability = favourable outcomes ÷ total outcomes. There are 3 red balls and 3+7=10 total. P(red) = 3/10",
+    hint: "How many balls are there in total? Probability is the number you want over the total.",
+  },
+  {
+    id: 2,
+    question: "A fair dice is rolled. What is P(rolling a number greater than 4)?",
+    options: ["1/6", "2/3", "1/2", "1/3"],
+    correct: 3,
+    working: "Numbers greater than 4 on a dice: 5 and 6. That's 2 outcomes out of 6 total. P = 2/6 = 1/3",
+    hint: "List the numbers on a dice that are greater than 4. How many are there?",
+  },
+  {
+    id: 3,
+    question: "P(A) = 0.3. What is P(not A)?",
+    options: ["0.3", "0.7", "0.6", "1.3"],
+    correct: 1,
+    working: "Probabilities of all outcomes sum to 1. P(not A) = 1 − P(A) = 1 − 0.3 = 0.7",
+    hint: "All probabilities must add up to 1. So P(not A) = 1 − P(A).",
+  },
+  {
+    id: 4,
+    question: "A coin is flipped twice. What is P(two heads)?",
+    options: ["1/2", "1/8", "1/4", "1/3"],
+    correct: 2,
+    working: "These are independent events. P(H) × P(H) = 1/2 × 1/2 = 1/4",
+    hint: "These are two separate independent events. Multiply their individual probabilities together.",
+  },
+  {
+    id: 5,
+    question: "In a class of 30, 12 play football and 10 play tennis. If they are mutually exclusive, what is P(plays either sport)?",
+    options: ["22/30", "12/30", "10/30", "2/30"],
+    correct: 0,
+    working: "For mutually exclusive events: P(A or B) = P(A) + P(B) = 12/30 + 10/30 = 22/30",
+    hint: "Mutually exclusive means no overlap. For 'either', you can simply add the probabilities.",
+  },
+  {
+    id: 6,
+    question: "A spinner has sections numbered 1–5 equally. What is P(even number)?",
+    options: ["3/5", "2/5", "1/5", "1/2"],
+    correct: 1,
+    working: "Even numbers from 1–5: 2 and 4. That's 2 favourable outcomes out of 5. P = 2/5",
+    hint: "Write out the numbers 1 to 5 and circle the even ones. How many did you circle?",
+  },
+  {
+    id: 7,
+    question: "There are 5 red and 3 green counters. One is taken out and NOT replaced. What is P(second is also red)?",
+    options: ["5/8", "4/7", "5/7", "4/8"],
+    correct: 1,
+    working: "After removing one red counter: 4 red remain, 7 total remain. P(red second) = 4/7",
+    hint: "After one red is removed, how many red counters are left? How many counters are left in total?",
+  },
+  {
+    id: 8,
+    question: "P(A) = 0.4, P(B) = 0.5, and A and B are mutually exclusive. What is P(A or B)?",
+    options: ["0.2", "0.1", "0.45", "0.9"],
+    correct: 3,
+    working: "For mutually exclusive events: P(A or B) = P(A) + P(B) = 0.4 + 0.5 = 0.9",
+    hint: "Mutually exclusive events cannot both happen. The 'or' rule for these is straightforward addition.",
+  },
+];
