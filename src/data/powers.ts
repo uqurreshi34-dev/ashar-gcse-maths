@@ -59,11 +59,11 @@ export const powerQuestions: Question[] = [
   },
   {
     id: 8,
-    question: "x^½ means the same as which of these?",
+    question: "What is x^(1/2) equal to?",
     options: ["x / 2", "2x", "√x", "x²"],
     correct: 2,
-    working: "A power of ½ means square root. x^½ = √x",
-    hint: "A fraction as a power relates to a type of root — which root does ½ suggest?",
+    working: "A power of 1/2 means square root. x^(1/2) = √x",
+    hint: "A fraction as a power relates to a type of root — which root does 1/2 suggest?",
   },
   {
     id: 9,
