@@ -80,7 +80,7 @@ export default function Home() {
         <div className="text-center mb-10 space-y-2">
           <p className="text-white/40 text-sm tracking-[0.2em] uppercase font-medium">GCSE Maths</p>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight">
-            Revision Practice
+            Ashar's Revision Practice
           </h1>
           <p className="text-white/50 text-sm">Pick a topic and test yourself</p>
         </div>
