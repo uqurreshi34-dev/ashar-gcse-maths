@@ -50,10 +50,17 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
           .filter(Boolean) as Question[];
         if (restored.length === questions.length) {
           setShuffled(restored);
-          setCurrent(s.current);
-          setScore(s.score);
-          setAnswers(s.answers);
-          setDone(s.done);
+          // If session was completed, start fresh rather than showing results screen
+          if (s.done) {
+            setShuffled(shuffleArray(questions));
+            setCurrent(0);
+            setScore(0);
+            setAnswers([]);
+          } else {
+            setCurrent(s.current);
+            setScore(s.score);
+            setAnswers(s.answers);
+          }
           setHydrated(true);
           return;
         }
