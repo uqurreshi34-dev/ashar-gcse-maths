@@ -5,6 +5,7 @@ import QuizTab from "@/components/QuizTab";
 import { equationQuestions } from "@/data/equations";
 import { powerQuestions } from "@/data/powers";
 import { probabilityQuestions } from "@/data/probability";
+import { triangleQuestions } from "@/data/triangles";
 
 const TABS = [
   {
@@ -33,6 +34,15 @@ const TABS = [
     questions: probabilityQuestions,
     accentColor: "#10b981",
     description: "Calculate chances and combined events",
+  },
+  {
+    id: "triangles",
+    label: "Triangles",
+    shortLabel: "Triangles",
+    icon: "📐",
+    questions: triangleQuestions,
+    accentColor: "#f43f5e",
+    description: "Angles in triangles and Pythagoras' theorem",
   },
 ];
 
@@ -86,7 +96,7 @@ export default function Home() {
         </div>
 
         {/* Tab buttons */}
-        <div className="grid grid-cols-3 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
+        <div className="grid grid-cols-4 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
           {TABS.map((t, i) => (
             <button
               key={t.id}
