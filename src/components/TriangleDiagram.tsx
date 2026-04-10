@@ -146,10 +146,10 @@ function AngleDiagram({ d }: { d: DiagramData }) {
     tx = 55;  ty = 45;
     rx = 55 + (by - ty); ry = H - 45; // equal legs so dx = dy
   } else if (d.isObtuse) {
-    // Flat wide triangle — apex shifted far right so bottom-left angle is visually > 90°
-    bx = 38;  by = H - 45;
-    rx = W - 38; ry = H - 45;
-    tx = W - 68; ty = H - 88;
+    // Apex almost directly above bottom-left, slightly right — makes bottom-left angle > 90°
+    bx = 55;  by = H - 45;
+    rx = W - 45; ry = H - 45;
+    tx = 90;  ty = 48;
   } else if (d.isIsosceles) {
     bx = 48;  by = H - 42;
     rx = W - 48; ry = H - 42;
