@@ -126,10 +126,6 @@ function PythagorasDiagram({ d }: { d: DiagramData }) {
       {/* Side C — hypotenuse — label along bisector, offset outward */}
       <text x={(tx + rx) / 2 + 16} y={(ty + ry) / 2 - 10} textAnchor="middle"
         fontSize="12" fontWeight="700" fill={colC}>{labelC}</text>
-      {d.unknown === "c" && (
-        <text x={(tx + rx) / 2 + 16} y={(ty + ry) / 2 + 6} textAnchor="middle"
-          fontSize="9" fill={unknownColor} opacity="0.75">(longest side)</text>
-      )}
     </svg>
   );
 }
@@ -212,21 +208,6 @@ function AngleDiagram({ d }: { d: DiagramData }) {
       <text x={lCx} y={lCy} textAnchor="middle" dominantBaseline="middle"
         fontSize="12" fontWeight="700" fill={colorC}>{labelC}</text>
 
-      {/* Isosceles tick marks */}
-      {d.isIsosceles && (
-        <>
-          <line
-            x1={(bx + tx) / 2 - 6} y1={(by + ty) / 2 - 3}
-            x2={(bx + tx) / 2 + 6} y2={(by + ty) / 2 + 3}
-            stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"
-          />
-          <line
-            x1={(rx + tx) / 2 - 6} y1={(ry + ty) / 2 - 3}
-            x2={(rx + tx) / 2 + 6} y2={(ry + ty) / 2 + 3}
-            stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"
-          />
-        </>
-      )}
     </svg>
   );
 }
