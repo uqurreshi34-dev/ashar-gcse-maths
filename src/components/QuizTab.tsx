@@ -37,7 +37,15 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   const [answers, setAnswers] = useState<boolean[]>([]);
   const [done, setDone] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [exhausted, setExhausted] = useState(false); // true when user used both attempts and got it wrong
+  const [exhausted, setExhausted] = useState(false);
+
+  // When tabId changes, immediately drop hydrated so the persist effect
+  // cannot fire with stale state from the previous tab before restore runs
+  useEffect(() => {
+    setHydrated(false);
+    setDone(false);
+    setExhausted(false);
+  }, [tabId]);
 
   // Restore persisted state on mount
   useEffect(() => {
@@ -73,7 +81,6 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   }, [tabId]);
 
   // Persist state whenever it changes (after hydration)
-  // Never persist done:true — completed sessions reset on next visit
   useEffect(() => {
     if (!hydrated) return;
     const state: TabState = {
@@ -81,7 +88,7 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
       current,
       score,
       answers,
-      done: false, // always save as false so other tabs/sessions start fresh
+      done,
     };
     localStorage.setItem(storageKey, JSON.stringify(state));
   }, [shuffled, current, score, answers, done, hydrated]);
@@ -129,8 +136,7 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   // Don't render until hydrated to avoid flash of wrong state
   if (!hydrated) return null;
 
-  // Only show results if done AND we have the right number of questions loaded
-  if (done && shuffled.length === questions.length) {
+  if (done) {
     return (
       <div className="flex flex-col items-center justify-center gap-8 py-12 text-center">
         <div className="text-6xl">{pct >= 70 ? "🏆" : pct >= 50 ? "📈" : "💪"}</div>
