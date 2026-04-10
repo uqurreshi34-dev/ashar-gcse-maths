@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { Question } from "@/data/equations";
+import { TriangleQuestion } from "@/data/triangles";
 import MathText from "@/components/MathText";
+import TriangleDiagram from "@/components/TriangleDiagram";
 
 interface QuestionCardProps {
-  question: Question;
+  question: Question | TriangleQuestion;
   questionNumber: number;
   onAnswer: (correct: boolean) => void;
   accentColor: string;
-  initialAnswer?: boolean; // undefined = fresh question; defined = navigating back to answered Q
+  initialAnswer?: boolean;
 }
 
 export default function QuestionCard({
@@ -107,6 +109,13 @@ export default function QuestionCard({
           className="text-lg md:text-xl font-semibold text-white leading-relaxed"
         />
       </div>
+
+      {/* Triangle diagram if present */}
+      {"diagram" in question && question.diagram && (
+        <div className="rounded-xl border border-white/10 bg-white/3 p-4">
+          <TriangleDiagram diagram={question.diagram} />
+        </div>
+      )}
 
       {/* Options */}
       <div className="grid gap-3">
