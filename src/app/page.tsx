@@ -123,9 +123,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Quiz — no key prop so tab switch preserves each tab's internal state */}
+        {/* Quiz — no key prop so tab switch is smooth and state is preserved via localStorage */}
         <QuizTab
-          key={tab.id}
           questions={tab.questions}
           accentColor={tab.accentColor}
           emptyIcon={tab.icon}
