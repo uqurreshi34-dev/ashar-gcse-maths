@@ -51,7 +51,6 @@ const TAB_STORAGE_KEY = "gcse-active-tab";
 export default function Home() {
   const [activeTab, setActiveTab] = useState(0);
 
-  // Restore last active tab on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(TAB_STORAGE_KEY);
@@ -73,7 +72,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Subtle gradient background */}
+      {/* Background gradient */}
       <div className="fixed inset-0 pointer-events-none">
         <div
           className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-10 transition-all duration-700"
@@ -85,26 +84,26 @@ export default function Home() {
         />
       </div>
 
-      <div className="relative z-10 max-w-2xl mx-auto px-4 py-10">
+      {/* Scrollable content — bottom padding leaves room for mobile tab bar */}
+      <div className="relative z-10 max-w-2xl mx-auto px-3 sm:px-4 pt-6 sm:pt-10 pb-28 sm:pb-10">
+
         {/* Header */}
-        <div className="text-center mb-10 space-y-2">
-          <p className="text-white/40 text-sm tracking-[0.2em] uppercase font-medium">GCSE Maths</p>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+        <div className="text-center mb-6 sm:mb-10 space-y-1">
+          <p className="text-white/40 text-xs tracking-[0.2em] uppercase font-medium">GCSE Maths</p>
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight">
             Ashar's Revision Practice
           </h1>
-          <p className="text-white/50 text-sm">Pick a topic and test yourself</p>
+          <p className="text-white/50 text-xs sm:text-sm">Pick a topic and test yourself</p>
         </div>
 
-        {/* Tab buttons */}
-        <div className="grid grid-cols-4 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
+        {/* Tab bar — desktop: inline above content */}
+        <div className="hidden sm:grid grid-cols-4 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
           {TABS.map((t, i) => (
             <button
               key={t.id}
               onClick={() => handleTabChange(i)}
               className={`relative flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl transition-all duration-200 text-center ${
-                activeTab === i
-                  ? "text-white"
-                  : "text-white/40 hover:text-white/70"
+                activeTab === i ? "text-white" : "text-white/40 hover:text-white/70"
               }`}
             >
               {activeTab === i && (
@@ -125,15 +124,15 @@ export default function Home() {
         </div>
 
         {/* Active tab description */}
-        <div className="mb-6 flex items-center gap-3">
-          <span className="text-2xl">{tab.icon}</span>
+        <div className="mb-4 sm:mb-6 flex items-center gap-3">
+          <span className="text-xl sm:text-2xl">{tab.icon}</span>
           <div>
-            <h2 className="font-bold text-white text-lg">{tab.label}</h2>
-            <p className="text-white/40 text-sm">{tab.description}</p>
+            <h2 className="font-bold text-white text-base sm:text-lg">{tab.label}</h2>
+            <p className="text-white/40 text-xs sm:text-sm">{tab.description}</p>
           </div>
         </div>
 
-        {/* Quiz — no key prop so tab switch is smooth and state is preserved via localStorage */}
+        {/* Quiz content */}
         <QuizTab
           questions={tab.questions}
           accentColor={tab.accentColor}
@@ -141,10 +140,37 @@ export default function Home() {
           tabId={tab.id}
         />
 
-        {/* Footer */}
-        <p className="text-center text-white/20 text-xs mt-12">
+        {/* Footer — hidden on mobile to save space */}
+        <p className="hidden sm:block text-center text-white/20 text-xs mt-12">
           Built for GCSE revision • Good luck! 💙
         </p>
+      </div>
+
+      {/* Mobile tab bar — fixed to bottom, only visible on small screens */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-t border-white/10">
+        <div className="grid grid-cols-4 px-2 py-2 gap-1 max-w-2xl mx-auto">
+          {TABS.map((t, i) => (
+            <button
+              key={t.id}
+              onClick={() => handleTabChange(i)}
+              className="flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all duration-200"
+            >
+              <span className="text-2xl leading-none">{t.icon}</span>
+              <span
+                className="text-[10px] font-bold tracking-wide leading-none"
+                style={{ color: activeTab === i ? t.accentColor : "rgba(255,255,255,0.35)" }}
+              >
+                {t.shortLabel}
+              </span>
+              {activeTab === i && (
+                <span
+                  className="w-1 h-1 rounded-full"
+                  style={{ backgroundColor: t.accentColor }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
       </div>
     </main>
   );

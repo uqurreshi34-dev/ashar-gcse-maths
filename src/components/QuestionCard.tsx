@@ -65,7 +65,7 @@ export default function QuestionCard({
 
   const optionStyle = (idx: number): string => {
     const base =
-      "w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-200 font-medium text-base ";
+      "w-full text-left px-3 py-3 sm:px-5 sm:py-4 rounded-xl border-2 transition-all duration-200 font-medium text-sm sm:text-base ";
 
     if (!locked && showingHint && idx === selected) {
       // Keep first wrong pick highlighted red while hint is shown
@@ -94,9 +94,9 @@ export default function QuestionCard({
   const showReveal = locked && !isCorrect;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8 space-y-6">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8 space-y-4 sm:space-y-6">
       {/* Question */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <span
           className="text-xs font-bold tracking-widest uppercase"
           style={{ color: accentColor }}
@@ -106,26 +106,26 @@ export default function QuestionCard({
         <MathText
           text={question.question}
           as="p"
-          className="text-lg md:text-xl font-semibold text-white leading-relaxed"
+          className="text-base sm:text-xl font-semibold text-white leading-relaxed"
         />
       </div>
 
       {/* Triangle diagram if present */}
       {"diagram" in question && question.diagram && (
-        <div className="rounded-xl border border-white/10 bg-white/3 py-3 px-2">
+        <div className="rounded-xl border border-white/10 bg-white/3 py-2 px-1 sm:py-3 sm:px-2">
           <TriangleDiagram diagram={question.diagram} />
         </div>
       )}
 
       {/* Options */}
-      <div className="grid gap-3">
+      <div className="grid gap-2 sm:gap-3">
         {question.options.map((opt, idx) => (
           <button
             key={idx}
             className={optionStyle(idx)}
             onClick={() => handleSelect(idx)}
           >
-            <span className="flex items-center gap-3">
+            <span className="flex items-center gap-2 sm:gap-3">
               <span className="flex-shrink-0 w-7 h-7 rounded-full border-2 border-current flex items-center justify-center text-xs font-bold">
                 {String.fromCharCode(65 + idx)}
               </span>
@@ -137,20 +137,20 @@ export default function QuestionCard({
 
       {/* Correct */}
       {showCorrect && (
-        <div className="rounded-xl p-5 border bg-emerald-500/10 border-emerald-500/30">
+        <div className="rounded-xl p-4 sm:p-5 border bg-emerald-500/10 border-emerald-500/30">
           <div className="flex items-center gap-2">
             <span className="text-xl">🎉</span>
-            <span className="font-bold text-base text-emerald-300">Correct! Great work!</span>
+            <span className="font-bold text-sm sm:text-base text-emerald-300">Correct! Great work!</span>
           </div>
         </div>
       )}
 
       {/* Hint after first wrong attempt */}
       {showHint && (
-        <div className="rounded-xl p-5 border bg-sky-500/10 border-sky-500/30 space-y-4">
+        <div className="rounded-xl p-4 sm:p-5 border bg-sky-500/10 border-sky-500/30 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">💭</span>
-            <span className="font-bold text-base text-sky-300">Hint</span>
+            <span className="font-bold text-sm sm:text-base text-sky-300">Hint</span>
           </div>
           <MathText
             text={question.hint}
@@ -169,14 +169,14 @@ export default function QuestionCard({
 
       {/* Reveal after second wrong attempt */}
       {showReveal && (
-        <div className="rounded-xl p-5 border bg-amber-500/10 border-amber-500/30">
+        <div className="rounded-xl p-4 sm:p-5 border bg-amber-500/10 border-amber-500/30">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-xl">💡</span>
-            <span className="font-bold text-base text-amber-300">Here's the solution:</span>
+            <span className="font-bold text-sm sm:text-base text-amber-300">Here's the solution:</span>
           </div>
           <div className="space-y-1">
             {question.working.split(". ").map((step, i) => (
-              <div key={i} className="flex gap-2 text-sm text-white/80">
+              <div key={i} className="flex gap-2 text-xs sm:text-sm text-white/80">
                 <span className="text-amber-400 font-bold flex-shrink-0">{i + 1}.</span>
                 <MathText text={step.endsWith(".") ? step : step + "."} />
               </div>
