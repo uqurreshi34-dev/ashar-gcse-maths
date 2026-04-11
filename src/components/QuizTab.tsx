@@ -39,10 +39,14 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   const [hydrated, setHydrated] = useState(false);
   const [exhausted, setExhausted] = useState(false);
 
-  // When tabId changes, immediately drop hydrated so the persist effect
-  // cannot fire with stale state from the previous tab before restore runs
+  // When tabId changes, reset everything immediately so stale state never
+  // bleeds into the new tab before the restore effect runs
   useEffect(() => {
     setHydrated(false);
+    setShuffled(questions);
+    setCurrent(0);
+    setScore(0);
+    setAnswers([]);
     setDone(false);
     setExhausted(false);
   }, [tabId]);
