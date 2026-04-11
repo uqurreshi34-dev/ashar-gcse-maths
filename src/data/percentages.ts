@@ -39,7 +39,7 @@ export const percentageQuestions: Question[] = [
     options: ["£60", "£180", "£189", "£200"],
     correct: 1,
     working: "Simple interest = Principal × Rate × Time. I = 1200 × 0.05 × 3 = £180",
-    hint: "Simple interest is calculated on the original amount each year — not on a growing total.",
+    hint: "Simple interest is calculated on the original amount each year — not on a growing total. Use: Interest = P × r × t, where P = starting money, r = interest rate as a decimal, t = time in years.",
   },
   {
     id: 6,
@@ -47,7 +47,7 @@ export const percentageQuestions: Question[] = [
     options: ["£2,160", "£2,163.20", "£2,168", "£2,080"],
     correct: 1,
     working: "Year 1: 2000 × 1.04 = £2,080. Year 2: 2080 × 1.04 = £2,163.20",
-    hint: "With compound interest, each year's interest is calculated on the new total, not the original amount.",
+    hint: "With compound interest, each year's interest is calculated on the new total, not the original amount. Use: A = P(1 + r)^t, where A = final amount, P = starting money, r = interest rate as a decimal, t = time in years.",
   },
   {
     id: 7,
@@ -79,6 +79,6 @@ export const percentageQuestions: Question[] = [
     options: ["£5,450.00", "£5,459.09", "£5,463.64", "£5,477.00"],
     correct: 2,
     working: "Use the formula: Amount = P × (1 + r)ⁿ. Amount = 5000 × 1.03³ = 5000 × 1.092727 = £5,463.64",
-    hint: "Use the compound interest formula: Amount = Principal × (1 + r)ⁿ where r is the rate as a decimal and n is the number of years.",
+    hint: "Use the compound interest formula: A = P(1 + r)^t, where A = final amount, P = starting money, r = interest rate as a decimal, t = time in years.",
   },
 ];
