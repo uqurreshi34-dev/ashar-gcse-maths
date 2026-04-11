@@ -10,7 +10,7 @@ import confetti from "canvas-confetti";
 interface QuestionCardProps {
   question: Question | TriangleQuestion;
   questionNumber: number;
-  onAnswer: (correct: boolean) => void;
+  onAnswer: (result: "first" | "hint" | "failed") => void;
   accentColor: string;
   initialAnswer?: boolean;
 }
@@ -111,7 +111,7 @@ export default function QuestionCard({
     if (idx === question.correct) {
       setShowingHint(false);
       setLocked(true);
-      onAnswer(true);
+      onAnswer(attempt === 0 ? "first" : "hint");
       fireConfetti(accentColor);
       playSuccessSound();
     } else {
@@ -123,7 +123,7 @@ export default function QuestionCard({
         setShowingHint(false);
         setAttempt(2);
         setLocked(true);
-        onAnswer(false);
+        onAnswer("failed");
         playErrorSound();
       }
     }

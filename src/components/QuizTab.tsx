@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Question } from "@/data/equations";
 import QuestionCard from "@/components/QuestionCard";
 
+type AnswerResult = "first" | "hint" | "failed";
+
 interface QuizTabProps {
   questions: Question[];
   accentColor: string;
@@ -24,9 +26,22 @@ interface TabState {
   shuffledIds: number[];
   current: number;
   score: number;
-  answers: boolean[];
+  answers: AnswerResult[];
   done: boolean;
 }
+
+// Dot colours per result
+const DOT_STYLE: Record<AnswerResult, string> = {
+  first:  "bg-emerald-400",
+  hint:   "bg-amber-400",
+  failed: "bg-red-400",
+};
+
+const DOT_LABEL: Record<AnswerResult, string> = {
+  first:  "✓ first try",
+  hint:   "✓ after hint",
+  failed: "✗ not answered",
+};
 
 export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: QuizTabProps) {
   const storageKey = `gcse-quiz-${tabId}`;
@@ -34,13 +49,13 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   const [shuffled, setShuffled] = useState<Question[]>(questions);
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState<boolean[]>([]);
+  const [answers, setAnswers] = useState<AnswerResult[]>([]);
   const [done, setDone] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [exhausted, setExhausted] = useState(false);
+  const [streak, setStreak] = useState(0);
 
-  // When tabId changes, reset everything immediately so stale state never
-  // bleeds into the new tab before the restore effect runs
+  // When tabId changes, reset everything immediately
   useEffect(() => {
     setHydrated(false);
     setShuffled(questions);
@@ -49,6 +64,7 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
     setAnswers([]);
     setDone(false);
     setExhausted(false);
+    setStreak(0);
   }, [tabId]);
 
   // Restore persisted state on mount
@@ -62,7 +78,6 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
           .filter(Boolean) as Question[];
         if (restored.length === questions.length) {
           setShuffled(restored);
-          // If session was completed, start fresh rather than showing results screen
           if (s.done) {
             setShuffled(shuffleArray(questions));
             setCurrent(0);
@@ -72,19 +87,25 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
             setCurrent(s.current);
             setScore(s.score);
             setAnswers(s.answers);
+            // Recalculate streak from saved answers
+            let str = 0;
+            for (let i = s.answers.length - 1; i >= 0; i--) {
+              if (s.answers[i] === "first") str++;
+              else break;
+            }
+            setStreak(str);
           }
           setHydrated(true);
           return;
         }
       }
     } catch {}
-    // No saved state — do initial shuffle
     const s = shuffleArray(questions);
     setShuffled(s);
     setHydrated(true);
   }, [tabId]);
 
-  // Persist state whenever it changes (after hydration)
+  // Persist state
   useEffect(() => {
     if (!hydrated) return;
     const state: TabState = {
@@ -92,7 +113,7 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
       current,
       score,
       answers,
-      done,
+      done: false,
     };
     localStorage.setItem(storageKey, JSON.stringify(state));
   }, [shuffled, current, score, answers, done, hydrated]);
@@ -100,13 +121,15 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
   const total = shuffled.length;
   const q = shuffled[current];
 
-  const handleAnswer = (correct: boolean) => {
-    if (correct) {
+  const handleAnswer = (result: AnswerResult) => {
+    if (result === "first" || result === "hint") {
       setScore((s) => s + 1);
-      setAnswers((a) => [...a, true]);
+      setAnswers((a) => [...a, result]);
+      setStreak((s) => result === "first" ? s + 1 : 0);
     } else {
-      // User exhausted both attempts — allow moving forward without recording a correct answer
+      setAnswers((a) => [...a, "failed"]);
       setExhausted(true);
+      setStreak(0);
     }
   };
 
@@ -133,36 +156,56 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
     setAnswers([]);
     setDone(false);
     setExhausted(false);
+    setStreak(0);
   };
 
   const pct = Math.round((score / total) * 100);
 
-  // Don't render until hydrated to avoid flash of wrong state
   if (!hydrated) return null;
 
-  if (done) {
+  // Results screen
+  if (done && shuffled.length === questions.length) {
+    const firstTry = answers.filter(a => a === "first").length;
+    const withHint = answers.filter(a => a === "hint").length;
+    const failed  = answers.filter(a => a === "failed").length;
+
     return (
-      <div className="flex flex-col items-center justify-center gap-8 py-12 text-center">
+      <div className="flex flex-col items-center justify-center gap-6 py-10 text-center">
         <div className="text-6xl">{pct >= 70 ? "🏆" : pct >= 50 ? "📈" : "💪"}</div>
         <div>
           <p className="text-4xl font-black text-white">{score} / {total}</p>
-          <p className="text-white/50 mt-1 text-lg">
-            {pct >= 70
-              ? "Brilliant! You're smashing it."
-              : pct >= 50
-              ? "Good effort — keep practising!"
-              : "Don't worry, every attempt helps!"}
+          <p className="text-white/50 mt-1 text-base">
+            {pct >= 70 ? "Brilliant! You're smashing it." : pct >= 50 ? "Good effort — keep practising!" : "Don't worry, every attempt helps!"}
           </p>
         </div>
 
-        {/* Score dots */}
-        <div className="flex gap-2 flex-wrap justify-center max-w-sm">
+        {/* Progress dots */}
+        <div className="flex gap-2 flex-wrap justify-center max-w-xs">
           {answers.map((a, i) => (
             <span
               key={i}
-              className={`w-4 h-4 rounded-full ${a ? "bg-emerald-400" : "bg-red-400"}`}
+              title={DOT_LABEL[a]}
+              className={`w-4 h-4 rounded-full ${DOT_STYLE[a]}`}
             />
           ))}
+        </div>
+
+        {/* Breakdown */}
+        <div className="flex gap-4 text-sm">
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
+            <span className="text-white/60">{firstTry} first try</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+            <span className="text-white/60">{withHint} after hint</span>
+          </span>
+          {failed > 0 && (
+            <span className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-red-400 inline-block" />
+              <span className="text-white/60">{failed} missed</span>
+            </span>
+          )}
         </div>
 
         <button
@@ -176,40 +219,58 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
     );
   }
 
-  // Question has been answered if answers array has an entry for current index, or user exhausted both attempts
   const isAnswered = answers.length > current || exhausted;
 
   return (
-    <div className="space-y-6">
-      {/* Progress bar */}
-      <div className="flex items-center gap-4">
-        <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${(current / total) * 100}%`,
-              backgroundColor: accentColor,
-            }}
-          />
+    <div className="space-y-5">
+      {/* Progress dots + streak */}
+      <div className="flex items-center gap-3">
+        {/* Dots */}
+        <div className="flex gap-1.5 flex-1 flex-wrap">
+          {Array.from({ length: total }).map((_, i) => {
+            const result = answers[i];
+            const isCurrent = i === current;
+            return (
+              <span
+                key={i}
+                className={`rounded-full transition-all duration-300 ${
+                  result
+                    ? `w-3 h-3 ${DOT_STYLE[result]}`
+                    : isCurrent
+                    ? "w-3 h-3 border-2 border-white/60"
+                    : "w-3 h-3 bg-white/15"
+                }`}
+              />
+            );
+          })}
         </div>
+
+        {/* Streak */}
+        {streak >= 2 && (
+          <div className="flex items-center gap-1 text-sm font-bold text-amber-400 whitespace-nowrap">
+            <span>🔥</span>
+            <span>{streak}</span>
+          </div>
+        )}
+
+        {/* Counter */}
         <span className="text-white/50 text-sm font-medium whitespace-nowrap">
           {current + 1} / {total}
         </span>
       </div>
 
-      {/* Question card — key includes answer state so it re-renders correctly on back */}
+      {/* Question card */}
       <QuestionCard
         key={`${tabId}-${q.id}-${current}`}
         question={q}
         questionNumber={current + 1}
         onAnswer={handleAnswer}
         accentColor={accentColor}
-        initialAnswer={isAnswered ? answers[current] : undefined}
+        initialAnswer={isAnswered ? (answers[current] !== "failed") : undefined}
       />
 
-      {/* Navigation buttons */}
+      {/* Navigation */}
       <div className="flex justify-between items-center">
-        {/* Back button — hidden on first question */}
         {current > 0 ? (
           <button
             onClick={handleBack}
@@ -221,7 +282,6 @@ export default function QuizTab({ questions, accentColor, emptyIcon, tabId }: Qu
           <span />
         )}
 
-        {/* Next / Results button — only shown once answered */}
         {isAnswered && (
           <button
             onClick={handleNext}
