@@ -35,7 +35,7 @@ export default function QuestionCard({
 
   const handleSelect = (idx: number) => {
     if (locked) return;
-    if (showingHint && idx === selected) return; // can't re-pick same wrong answer
+    if (showingHint) return; // must click Retry before answering again
     setSelected(idx);
 
     if (idx === question.correct) {
@@ -68,8 +68,11 @@ export default function QuestionCard({
       "w-full text-left px-3 py-3 sm:px-5 sm:py-4 rounded-xl border-2 transition-all duration-200 font-medium text-sm sm:text-base ";
 
     if (!locked && showingHint && idx === selected) {
-      // Keep first wrong pick highlighted red while hint is shown
-      return base + "border-red-400 bg-red-500/20 text-red-300";
+      return base + "border-red-400 bg-red-500/20 text-red-300 cursor-not-allowed";
+    }
+
+    if (!locked && showingHint) {
+      return base + "border-white/5 bg-white/3 text-white/20 cursor-not-allowed";
     }
 
     if (!locked) {
