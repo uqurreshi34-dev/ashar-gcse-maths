@@ -162,9 +162,9 @@ export default function QuestionCard({
     return base + "border-white/5 bg-white/3 text-white/30";
   };
 
-  const showCorrect = locked && isCorrect;
+  const showCorrect = locked && isCorrect && attempt !== 2;
   const showHint = showingHint;
-  const showReveal = locked && !isCorrect;
+  const showReveal = locked && (!isCorrect || attempt === 2);
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-8 space-y-4 sm:space-y-6">
