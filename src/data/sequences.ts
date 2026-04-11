@@ -67,11 +67,11 @@ export const sequenceQuestions: Question[] = [
   },
   {
     id: 9,
-    question: "Is 85 a term in the sequence with nth term 6n + 1?",
-    options: ["Yes, it is the 13th term", "Yes, it is the 14th term", "No, 85 is not in this sequence", "No, the sequence only has 10 terms"],
-    correct: 1,
-    working: "Set 6n + 1 = 85. So 6n = 84, n = 14. Since n = 14 is a positive whole number, 85 is the 14th term.",
-    hint: "Solve 6n + 1 = 85 for n. If n is a positive whole number, 85 is in the sequence.",
+    question: "The nth term of a sequence is 5n − 2. Which of these numbers is in the sequence?",
+    options: ["37", "41", "48", "52"],
+    correct: 2,
+    working: "Test each: if 5n − 2 = 48, then 5n = 50, n = 10. Since n = 10 is a whole number, 48 is in the sequence. Check others: 37 gives n = 7.8, 41 gives n = 8.6, 52 gives n = 10.8 — none are whole numbers.",
+    hint: "For each option, set it equal to 5n − 2 and solve for n. Only a positive whole number value of n means it's in the sequence.",
   },
   {
     id: 10,
@@ -92,9 +92,9 @@ export const sequenceQuestions: Question[] = [
   {
     id: 12,
     question: "The nth term of a sequence is 3n² + 2n. Which of the following is a term in the sequence?",
-    options: ["36", "54", "85", "100"],
-    correct: 2,
-    working: "Test values of n: n = 3 gives 3(9) + 2(3) = 27 + 6 = 33. n = 4 gives 3(16) + 2(4) = 48 + 8 = 56. n = 5 gives 3(25) + 2(5) = 75 + 10 = 85. So 85 is in the sequence (5th term).",
+    options: ["30", "50", "70", "85"],
+    correct: 3,
+    working: "Test each option: n=3 gives 3(9)+2(3)=33, n=4 gives 3(16)+2(4)=56, n=5 gives 3(25)+2(5)=85. So 85 is the 5th term. 30, 50 and 70 do not appear.",
     hint: "Substitute small values of n into the formula and see which answer option appears.",
   },
 ];
