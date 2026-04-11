@@ -5,6 +5,7 @@ import { Question } from "@/data/equations";
 import { TriangleQuestion } from "@/data/triangles";
 import MathText from "@/components/MathText";
 import TriangleDiagram from "@/components/TriangleDiagram";
+import confetti from "canvas-confetti";
 
 interface QuestionCardProps {
   question: Question | TriangleQuestion;
@@ -12,6 +13,48 @@ interface QuestionCardProps {
   onAnswer: (correct: boolean) => void;
   accentColor: string;
   initialAnswer?: boolean;
+}
+
+// Play a short success chime using Web Audio API
+function playSuccessSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const start = ctx.currentTime + i * 0.12;
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.3, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
+      osc.start(start);
+      osc.stop(start + 0.25);
+    });
+  } catch {}
+}
+
+function fireConfetti(accentColor: string) {
+  // Two bursts from the sides
+  confetti({
+    particleCount: 60,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0, y: 0.7 },
+    colors: [accentColor, "#ffffff", "#ffd700"],
+    zIndex: 9999,
+  });
+  confetti({
+    particleCount: 60,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1, y: 0.7 },
+    colors: [accentColor, "#ffffff", "#ffd700"],
+    zIndex: 9999,
+  });
 }
 
 export default function QuestionCard({
@@ -23,7 +66,6 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const wasAnswered = initialAnswer !== undefined;
 
-  // attempt: 0 = fresh, 1 = first wrong (used internally after retry too), 2 = second wrong locked
   const [attempt, setAttempt] = useState(0);
   const [showingHint, setShowingHint] = useState(false);
   const [selected, setSelected] = useState<number | null>(
@@ -42,13 +84,13 @@ export default function QuestionCard({
       setShowingHint(false);
       setLocked(true);
       onAnswer(true);
+      fireConfetti(accentColor);
+      playSuccessSound();
     } else {
       if (attempt === 0) {
-        // First wrong — show hint
         setAttempt(1);
         setShowingHint(true);
       } else {
-        // Second wrong — reveal and allow forward
         setShowingHint(false);
         setAttempt(2);
         setLocked(true);
@@ -59,8 +101,7 @@ export default function QuestionCard({
 
   const handleRetry = () => {
     setSelected(null);
-    setShowingHint(false); // explicitly hide hint
-    // attempt stays at 1 — next wrong pick triggers reveal
+    setShowingHint(false);
   };
 
   const optionStyle = (idx: number): string => {
@@ -82,7 +123,6 @@ export default function QuestionCard({
       );
     }
 
-    // Locked
     if (idx === question.correct) {
       return base + "border-emerald-400 bg-emerald-500/20 text-emerald-300";
     }
