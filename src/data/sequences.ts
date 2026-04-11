@@ -92,7 +92,7 @@ export const sequenceQuestions: Question[] = [
   {
     id: 12,
     question: "The nth term of a sequence is 3n² + 2n. Which of the following is a term in the sequence?",
-    options: ["33", "56", "85", "100"],
+    options: ["36", "54", "85", "100"],
     correct: 2,
     working: "Test values of n: n = 3 gives 3(9) + 2(3) = 27 + 6 = 33. n = 4 gives 3(16) + 2(4) = 48 + 8 = 56. n = 5 gives 3(25) + 2(5) = 75 + 10 = 85. So 85 is in the sequence (5th term).",
     hint: "Substitute small values of n into the formula and see which answer option appears.",
