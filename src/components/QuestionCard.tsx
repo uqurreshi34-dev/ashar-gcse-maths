@@ -37,6 +37,34 @@ function playSuccessSound() {
   } catch {}
 }
 
+// Play an electric buzzer sound for incorrect answer
+function playErrorSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    // Add distortion for buzzer character
+    const distortion = ctx.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) {
+      const x = (i * 2) / 256 - 1;
+      curve[i] = (Math.PI + 400) * x / (Math.PI + 400 * Math.abs(x));
+    }
+    distortion.curve = curve;
+    osc.connect(distortion);
+    distortion.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sawtooth";
+    // Descending pitch — classic wrong-answer feel
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch {}
+}
+
 function fireConfetti(accentColor: string) {
   // Two bursts from the sides
   confetti({
@@ -90,11 +118,13 @@ export default function QuestionCard({
       if (attempt === 0) {
         setAttempt(1);
         setShowingHint(true);
+        playErrorSound();
       } else {
         setShowingHint(false);
         setAttempt(2);
         setLocked(true);
         onAnswer(false);
+        playErrorSound();
       }
     }
   };
