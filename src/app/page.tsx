@@ -6,6 +6,8 @@ import { equationQuestions } from "@/data/equations";
 import { powerQuestions } from "@/data/powers";
 import { probabilityQuestions } from "@/data/probability";
 import { triangleQuestions } from "@/data/triangles";
+import { percentageQuestions } from "@/data/percentages";
+import { sequenceQuestions } from "@/data/sequences";
 
 const TABS = [
   {
@@ -43,6 +45,24 @@ const TABS = [
     questions: triangleQuestions,
     accentColor: "#f43f5e",
     description: "Angles in triangles and Pythagoras' theorem",
+  },
+  {
+    id: "percentages",
+    label: "Percentages",
+    shortLabel: "%",
+    icon: "💸",
+    questions: percentageQuestions,
+    accentColor: "#8b5cf6",
+    description: "Percentage change, interest and reverse percentages",
+  },
+  {
+    id: "sequences",
+    label: "Sequences",
+    shortLabel: "Sequences",
+    icon: "🔢",
+    questions: sequenceQuestions,
+    accentColor: "#06b6d4",
+    description: "nth term, arithmetic and geometric sequences",
   },
 ];
 
@@ -97,7 +117,7 @@ export default function Home() {
         </div>
 
         {/* Tab bar — desktop: inline above content */}
-        <div className="hidden sm:grid grid-cols-4 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
+        <div className="hidden sm:grid grid-cols-6 gap-2 mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/10">
           {TABS.map((t, i) => (
             <button
               key={t.id}
@@ -148,7 +168,7 @@ export default function Home() {
 
       {/* Mobile tab bar — fixed to bottom, only visible on small screens */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-md border-t border-white/10">
-        <div className="grid grid-cols-4 px-2 py-2 gap-1 max-w-2xl mx-auto">
+        <div className="grid grid-cols-6 px-1 py-2 gap-1 max-w-2xl mx-auto">
           {TABS.map((t, i) => (
             <button
               key={t.id}
